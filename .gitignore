@@ -3,5 +3,5 @@
 .png
 *.png
 *.svg
-*.rb\\*
-/tests/*circle_test.rb*
+*.rb\*
+
