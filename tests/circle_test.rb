@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 require_relative '../circle.rb'
 require 'minitest/autorun'
 require 'minitest/pride'
 
 class TestCircle < MiniTest::Test
   def setup
-    @c = Circle.new(x: Math::sqrt(2), y: 0.0, r: 1.0)
+    @c = Circle.new(x: Math.sqrt(2), y: 0.0, r: 1.0)
     @prng = Random.new
   end
 
@@ -17,19 +18,19 @@ class TestCircle < MiniTest::Test
     assert_equal c.r, 1.0
     assert_equal c.c, 0.0 + 0.0i
     c = Circle.new(r: nil, c: 1.0i)
-    coeff = [0.0, -1.0+0.0i, -1.0+0.0i, 0.0]
+    coeff = [0.0, -1.0 + 0.0i, -1.0 + 0.0i, 0.0]
     assert_equal c.coeff, coeff
     assert_nil c.r
     assert_equal c.c, 1.0i
   end
-  
+
   def test_coeff_constructor
     coeff = [1.0, 0.0, 0.0, -1.0]
     c = Circle.new(coeff: coeff)
     assert_equal 1.0, c.r
     assert_equal 0.0 + 0.0i, c.c
     assert_equal coeff, c.coeff
-    coeff = [0.0, -1.0+0.0i, -1.0+0.0i, 0.0]
+    coeff = [0.0, -1.0 + 0.0i, -1.0 + 0.0i, 0.0]
     c = Circle.new(coeff: coeff)
     assert_nil c.r
     assert_equal 1.0i, c.c
@@ -88,10 +89,10 @@ class TestCircle < MiniTest::Test
     m = Matrix[[0, 1], [1, 0]]
     c = @c.translate_by(m)
     4.times do |i|
-      assert_in_epsilon @c.coeff[i], c.coeff[3-i]
+      assert_in_epsilon @c.coeff[i], c.coeff[3 - i]
     end
     # scaling
-    m = Matrix[[t , 0.0], [0.0, 1.0 / t]]
+    m = Matrix[[t, 0.0], [0.0, 1.0 / t]]
     c = Circle.new(x: 0, y: 0, r: 1)
     c = c.translate_by(m)
     assert_in_epsilon 0.0, c.c
@@ -109,7 +110,7 @@ class TestCircle < MiniTest::Test
     m = Matrix[[x, 0], [0, 1 / x]]
     d = c.translate_by(m)
     assert_in_epsilon c.r, d.r
-    assert_in_epsilon(1i*c.c, d.c)
+    assert_in_epsilon(1i * c.c, d.c)
   end
 
   def test_get_bisector
@@ -117,15 +118,15 @@ class TestCircle < MiniTest::Test
     q = -p
     c = Circle.get_bisector(p, q)
     assert_nil c.r
-    assert_in_epsilon (p - q)*(-1i) / (p - q).abs, c.c
+    assert_in_epsilon (p - q) * -1i / (p - q).abs, c.c
     p = 0.0 + 0.0i
-    t = @prng.rand((0..(2*Math::PI)))
-    q = Math::sqrt(0.5) * exp(t * 1.0i)
+    t = @prng.rand((0..(2 * Math::PI)))
+    q = Math.sqrt(0.5) * exp(t * 1.0i)
     c = Circle.get_bisector(p, q)
     assert_in_epsilon 1.0, c.r
-    assert_in_epsilon Math::sqrt(2) * exp(t * 1.0i), c.c
+    assert_in_epsilon Math.sqrt(2) * exp(t * 1.0i), c.c
   end
-  
+
   def test_get_triple
     skip
   end
@@ -185,7 +186,7 @@ class TestCircle < MiniTest::Test
       return z if z.abs < 1.0
     end
   end
-  
+
   def test_plot_circle
     skip
   end
