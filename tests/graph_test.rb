@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative '../graph.rb'
 require 'minitest/autorun'
 require 'minitest/pride'
@@ -5,10 +6,10 @@ require 'minitest/pride'
 class TestGraph < MiniTest::Test
   def setup
     @p = 0.0 + 0.0i
-    @gen = [Matrix[[(-2.220446049250313e-16+2.0i),
-                    (5.551115123125783e-16-1.4142135623730954i)],
-                   [(1.1102230246251565e-16-1.414213562373095i),
-                    (-5.551115123125783e-17+1.9999999999999998i)]]]
+    @gen = [Matrix[[(-2.220446049250313e-16 + 2.0i),
+                    (5.551115123125783e-16 - 1.4142135623730954i)],
+                   [(1.1102230246251565e-16 - 1.414213562373095i),
+                    (-5.551115123125783e-17 + 1.9999999999999998i)]]]
     @graph = Graph.new(@p, @gen, 3)
   end
 
@@ -32,8 +33,8 @@ class TestGraph < MiniTest::Test
     assert_equal 2, @graph.root.border.length
   end
 
-  def test_get_tesselation
-    @graph.get_tesselation
+  def test_get_tessellation
+    @graph.get_tessellation
     @graph.each do |node|
       assert_equal 2, node.border.length
       @graph.root.border.length.times do |i|
