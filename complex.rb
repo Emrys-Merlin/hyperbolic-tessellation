@@ -1,11 +1,10 @@
+# frozen_string_literal: true
 require 'complex'
 
-require 'daru'
-include Daru
-
+# Just the standard complex class with an extra method
 class Complex
-  def plot_pt()
-      pt = DataFrame.new({x: [real], y: [imag]})
-      [pt, using: '2:3']
+  def plot_pt
+    coord = [[real], [imag]]
+    [coord]
   end
 end
