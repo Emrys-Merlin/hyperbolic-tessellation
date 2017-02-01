@@ -134,10 +134,10 @@ class TestCircle < MiniTest::Test
   def test_get_transformation
     r1 = @prng.rand(0.0..1000.0)
     r2 = @prng.rand(0.0..1000.0)
-    t1 = @prng.rand(0.0..2*Math::PI)
-    t2 = @prng.rand(0.0..2*Math::PI)
-    c1 = Circle.new(c: Math::sqrt(1.0 + r1**2) * exp(t1), r: r1)
-    c2 = Circle.new(c: Math::sqrt(1.0 + r2**2) * exp(t2), r: r2)
+    t1 = @prng.rand(0.0..2 * Math::PI)
+    t2 = @prng.rand(0.0..2 * Math::PI)
+    c1 = Circle.new(c: Math.sqrt(1.0 + r1**2) * exp(t1), r: r1)
+    c2 = Circle.new(c: Math.sqrt(1.0 + r2**2) * exp(t2), r: r2)
     c3 = Circle.new(c: exp(t2), r: nil)
     g = c1.get_transformation(c2)
     c = c1.translate_by(g)
@@ -155,30 +155,29 @@ class TestCircle < MiniTest::Test
     assert_in_epsilon c1.c, c.c
   end
 
-  # TODO: Fix transformations
   def test_transformation_in_disk
-    r1 = @prng.rand(0.0..10.0)
-    r2 = @prng.rand(0.0..10.0)
-    t1 = @prng.rand(0.0..2*Math::PI)
-    t2 = @prng.rand(0.0..2*Math::PI)
-    c1 = Circle.new(c: Math::sqrt(1.0 + r1**2) * exp(t1), r: r1)
-    c2 = Circle.new(c: Math::sqrt(1.0 + r2**2) * exp(t2), r: r2)
+    r1 = @prng.rand(0.0..100.0)
+    r2 = @prng.rand(0.0..100.0)
+    t1 = @prng.rand(0.0..2 * Math::PI) * 1i
+    t2 = @prng.rand(0.0..2 * Math::PI) * 1i
+    c1 = Circle.new(c: Math.sqrt(1.0 + r1**2) * exp(t1), r: r1)
+    c2 = Circle.new(c: Math.sqrt(1.0 + r2**2) * exp(t2), r: r2)
     c3 = Circle.new(c: exp(t2), r: nil)
     g = c1.get_transformation(c2)
-    100.times do |i|
-      z = get_pr_in_disk
+    1_000.times do |i|
+      z = pr_in_disk
       w = g.moebius(z)
       assert w.abs < 1, "#{i} initial: #{z}, trafo: #{w}"
     end
     g = c1.get_transformation(c3)
-    100.times do |i|
-      z = get_pr_in_disk
+    1_000.times do |i|
+      z = pr_in_disk
       w = g.moebius(z)
       assert w.abs < 1, "#{i} initial: #{z}, trafo: #{w}"
     end
   end
 
-  def get_pr_in_disk
+  def pr_in_disk
     loop do
       x = @prng.rand(-1.0...1.0)
       y = @prng.rand(-1.0...1.0)
