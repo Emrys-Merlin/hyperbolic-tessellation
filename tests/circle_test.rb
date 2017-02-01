@@ -43,13 +43,13 @@ class TestCircle < MiniTest::Test
     assert_equal 1.0 + 2.0i, c.c
   end
 
-  def test_is_geodesic
-    c = Circle.new(x: Math::sqrt(2), y: 0.0, r: 1.0)
-    assert c.is_geodesic?
-    d = Circle.new(x: Math::sqrt(2), y: 0.0, r: 0.5)
-    assert !d.is_geodesic?
+  def test_geodesic?
+    c = Circle.new(x: Math.sqrt(2), y: 0.0, r: 1.0)
+    assert c.geodesic?
+    d = Circle.new(x: Math.sqrt(2), y: 0.0, r: 0.5)
+    assert !d.geodesic?
     e = Circle.new(x: 0.5, y: 0.0, r: 1.0)
-    assert !e.is_geodesic?
+    assert !e.geodesic?
   end
 
   def test_in_disk
