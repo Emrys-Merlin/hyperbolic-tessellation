@@ -138,7 +138,7 @@ class Graph
     circles = node.border
     angles = Hash.new { |hsh, key| hsh[key] = [] }
     # Find intersections between each pair of circles c1, c2
-    (0...(circles.length - 1)).each do |i|
+    (0...circles.length).each do |i|
       c1 = circles[i]
       ((i + 1)...circles.length).each do |j|
         c2 = circles[j]
