@@ -44,8 +44,8 @@ class Circle
     end
   end
 
-  def plot_circle(color = 'blue')
-    df = generalized_circle_points
+  def plot_circle(angles, color = 'blue')
+    df = generalized_circle_points(angles)
     std_circle_plot(df, color)
   end
 
@@ -53,7 +53,7 @@ class Circle
     [df, with: 'lines', lt: "rgb '#{color}'"]
   end
 
-  def generalized_circle_points(step = 0.01)
+  def generalized_circle_points(angles, step = 100)
     # line
     if @r.nil?
 
@@ -61,8 +61,9 @@ class Circle
 
       x = []
       y = []
-
-      (-1..1).step(step).each do |t|
+      (0..step).each do |j|
+        js = j.to_f / step
+        t = js - (1 - js)
         x << t * v.real
         y << t * v.imag
       end
@@ -72,24 +73,98 @@ class Circle
       x = []
       y = []
 
-      ratio = @r / @c.abs
-      if ratio.abs <= 1
-        alpha = Math.acos(ratio)
+      angles.map! { |a| a.round(6) }.uniq!
 
-        gamma = @c.arg + PI
-
-        (-alpha..alpha).step(step).each do |t|
-          p = @c + @r * exp((t + gamma) * 1i)
-
-          x << p.real
-          y << p.imag
-        end
+      if angles.length < 2
+        puts angles
+        pp self
+        raise "Need two angles, have #{angles.length}"
       end
+      alpha = angles[0]
+      beta = angles [1]
+
+      seg = beta - alpha
+      gamma = (alpha + beta) / 2.0
+      if (self.c + self.r * exp(gamma * 1i)).abs > 1.0
+        k = ((alpha - beta).abs / (2 * Math::PI)).ceil
+        if beta < alpha
+          beta += k * 2 * Math::PI
+        else
+          beta -= k * 2 * Math::PI
+        end
+        seg = beta - alpha
+      end
+
+      (0..step).each do |j|
+        js = j.to_f / step
+        t = seg * js
+        p = @c + @r * exp((alpha + t) * 1i)
+
+        x << p.real
+        y << p.imag
+      end
+      
+      # ratio = @r / @c.abs
+      # if ratio.abs <= 1
+      #   alpha = Math.acos(ratio)
+
+      #   gamma = @c.arg + PI
+
+      #   (0..step).each do |j|
+      #     js = j.to_f / step
+      #     t = -alpha * (1 - js) + alpha * js
+      #     p = @c + @r * exp((t + gamma) * 1i)
+
+      #     x << p.real
+      #     y << p.imag
+      #   end
+      # end
     end
 
+    # z = Complex(x.first, y.first)
+    # z /= z.abs
+    # x[0] = z.real
+    # y[0] = z.imag
+
+    # z = Complex(x.last, y.last)
+    # z /= z.abs
+    # x[-1] = z.real
+    # y[-1] = z.imag
+    
     [x, y]
   end
 
+  def plot_circle_hs(angles, color = 'blue')
+    df = generalized_circle_points_hs(angles)
+    std_circle_plot_hs(df, color)
+  end
+
+  def plot_circle_hs_rhino(angles)
+    df = generalized_circle_points_hs(angles)
+  end
+  
+  def std_circle_plot_hs(df, color = 'blue')
+    [df, lt: "rgb '#{color}'"]
+  end
+  
+  def generalized_circle_points_hs(angles, step = 1000)
+    x, y = generalized_circle_points(angles, step)
+    length = x.length
+
+    rx = []
+    ry = []
+    rz = []
+
+    length.times do |i|
+      den = 1 + x[i]**2 + y[i]**2
+      rx << 2*x[i] / den
+      ry << 2*y[i] / den
+      rz << (-1 + x[i]**2 + y[i]**2) / den
+    end
+
+    [rx, ry, rz]
+  end
+  
   def get_triple
     # line
     if @r.nil?
@@ -199,5 +274,38 @@ class Circle
     d = a
 
     Circle.new(coeff: [a, b, c, d])
+  end
+
+  def get_intersection(circ)
+    r = self.r
+    c = self.c
+    d = (c - circ.c).abs
+    # Ignore straight lines for now
+    m = [r, circ.r, d].max
+    s = ([r, circ.r, d] - [m]).inject(:+)
+    return nil if r.nil? or circ.r.nil? or s < m
+
+    if r + circ.r == d
+      return [circ.c + (c - circ.c) * circ.r]
+    end
+
+    ca = ((d**2 + circ.r**2 - r**2)/(2 * d * circ.r)).round(8)
+
+    if ca.abs > 1
+      puts '####'
+      pp self
+      pp circ
+      pp ca
+    end
+
+    alpha = Math.acos(ca)
+    beta = (c - circ.c).angle
+    [circ.c + circ.r * exp((beta + alpha) * 1i),
+     circ.c + circ.r * exp((beta - alpha) * 1i)]
+  end
+
+  def separates(p, q)
+    ((p - @c).abs < @r && (q - @c).abs > @r) ||
+      ((p - @c).abs > @r && (q - @c).abs < @r)
   end
 end
