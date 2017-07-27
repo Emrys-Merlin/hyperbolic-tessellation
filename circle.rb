@@ -76,9 +76,10 @@ class Circle
       angles.map! { |a| a.round(6) }.uniq!
 
       if angles.length < 2
-        puts angles
-        pp self
-        raise "Need two angles, have #{angles.length}"
+        # puts angles
+        # pp self
+        # raise "Need two angles, have #{angles.length}"
+        angles = [0, 2 * Math::PI]
       end
       alpha = angles[0]
       beta = angles [1]
