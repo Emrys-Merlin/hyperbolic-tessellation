@@ -1,4 +1,3 @@
-# hyperbolic-tessellation
 Hyperbolic tessellation
 =======================
 
