@@ -9,7 +9,7 @@ The image is generated via gnuplot.rb, hence there are many output formats avail
 Example images
 -----------------
 
-Fundamental domain of a genus 2 surface (Torus) with reflections up to a depth of 3
+Fundamental domain of a genus 2 surface with reflections up to a depth of 3
 ![Fundamental domain of a genus 2 surface](./genus_2_depth_3.png "Genus 2")
 
 Fundamental domain of a genus 3 surface with reflections up to a depth of 3
